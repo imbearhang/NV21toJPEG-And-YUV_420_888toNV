@@ -61,7 +61,19 @@ public static final class FileManager {
         }
     }
     
-     public void run() {
+     public class ImageSaver implements Runnable {
+
+        /**
+         * The JPEG image
+         */
+        public final Image mImage;
+
+        ImageSaver(Image image) {
+            mImage = image;
+        }
+
+        @Override
+        public void run() {
             String fileName = !nextFileName.equals("") ? nextFileName : (new Date().getTime()) + ".jpg";
             showToast("SAVED: " + fileName + " ,COST: " + ((new Date().getTime() - captureStart.getTime())));
             try {
@@ -73,3 +85,5 @@ public static final class FileManager {
                 e.printStackTrace();
             }
         }
+
+    }
