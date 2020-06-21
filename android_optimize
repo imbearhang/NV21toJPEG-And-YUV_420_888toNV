@@ -87,3 +87,24 @@ public static final class FileManager {
         }
 
     }
+    
+               case STATE_WAITING_LOCK: {
+                    Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+                    mState = STATE_PICTURE_TAKEN;
+                    captureStillPicture();
+                    if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState || CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
+                        Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
+                        if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+                            Log.d(TAG, "process:   if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {");
+                            mState = STATE_PICTURE_TAKEN;
+                            captureStillPicture();
+                        } else {
+                            runPrecaptureSequence();
+                        }
+                    } else {
+                        Log.d(TAG, "STATE_WAITING_LOCK: in here");
+                        mState = STATE_PICTURE_TAKEN;
+                        captureStillPicture();
+                    }
+                    break;
+                }
